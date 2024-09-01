@@ -2,7 +2,9 @@
 
 # _About_
 
-hierarchy is a Clojure library for primarily designed to enhance the built-in hierarchy functions in Clojure, in order to more freely support the use of a variety of value types when calling derive/underive.
+The hierarchy library is an opinionated Clojure library primarily designed to enhance the built-in hierarchy functions,
+it removes the constraints that the hierarchy relationship's parent must be a namespace-qualified symbol or keyword and
+or that child must be either a namespace-qualified symbol or keyword or a class.
 
 # _Usage_
 
@@ -10,8 +12,18 @@ Here's a simple example.
 
 ```clj
 (ns user
-  (:require [hierarchy.core :as h]))
+  (:require [hierarchy.core]))
 
+;;; using global hierarchy
+(derive :bar :that)
+(derive :foo :bar)
+(isa? :foo :bar) ;; => true
+
+;;; using via make-hierarchy
+(-> (make-hierarchy)
+    (derive :bar :that)
+    (derive :foo :bar)
+    (isa? :foo :bar)) ;; => true
 ```
 
 See the existing tests for more examples.
