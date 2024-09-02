@@ -1,6 +1,36 @@
 (ns hierarchy.core
   (:require [clojure.core :as core]))
 
+(declare derive+ underive+)
+
+(defonce ^:private activation-map
+  (delay
+    {#'core/derive [derive derive+]
+     #'core/underive [underive underive+]}))
+
+(defn activate!
+  "Replaces clojure.core's `derive` and `underive` with `derive+` and `underive+` respectively via alter-var-root"
+  []
+  (doseq [[v [_ f]] @activation-map]
+    (alter-var-root v (constantly f)))
+  {#'core/derive core/derive
+   #'core/underive core/underive})
+
+(defn deactivate!
+  "Restores clojure.core's `derive` and `underive` respectively via alter-var-root"
+  []
+  (doseq [[v [f _]] @activation-map]
+    (alter-var-root v (constantly f)))
+  {#'core/derive core/derive
+   #'core/underive core/underive})
+
+(defmacro bound
+  "Dynamically binds clojure.core's `derive` and `underive` with `derive+` and `underive+` respectively via `with-bindings`."
+  [& body]
+  `(with-redefs [core/derive derive+
+                 core/underive underive+]
+     ~@body))
+
 (defn derive+
   "Establishes a parent/child relationship between parent and tag.
   Unlike `clojure.core/underive`, there is no requirement that
@@ -62,9 +92,3 @@
                (core/make-hierarchy)
                deriv-seq)
        h))))
-
-(when (not= core/derive derive+)
-  (alter-var-root #'core/derive (constantly derive+)))
-
-(when (not= core/underive underive+)
-  (alter-var-root #'core/underive (constantly underive+)))

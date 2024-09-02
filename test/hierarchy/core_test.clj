@@ -25,11 +25,20 @@
    [:vector hierarchy-id]
    hierarchy-id])
 
-(deftest hierarchy-bindings-are-installed-test
+(deftest hierarchy-bindings-are-active-global-test
+  (h/activate!)
   (testing "derive is installed"
     (is (= h/derive+ derive)))
   (testing "underive is installed"
     (is (= h/underive+ underive))))
+
+(deftest hierarchy-bindings-are-active-bound-test
+  (h/deactivate!)
+  (h/bound
+   (testing "derive is installed"
+     (is (= h/derive+ derive)))
+   (testing "underive is installed"
+     (is (= h/underive+ underive)))))
 
 (defspec derive-tests
   1000
@@ -39,8 +48,20 @@
            :descendants {that #{bar foo}, bar #{foo}},
            :ancestors {bar #{that}, foo #{bar that}}}
           (-> (make-hierarchy)
-              (derive bar that)
-              (derive foo bar))))))
+              (h/derive+ bar that)
+              (h/derive+ foo bar))))))
+
+(defspec derive-bound-tests
+  1000
+  (prop/for-all
+   [[foo bar that] (gen/vector-distinct (mg/generator hierarchy-member) {:num-elements 3})]
+   (h/bound
+    (is (= {:parents {bar #{that}, foo #{bar}},
+            :descendants {that #{bar foo}, bar #{foo}},
+            :ancestors {bar #{that}, foo #{bar that}}}
+           (-> (make-hierarchy)
+               (derive bar that)
+               (derive foo bar)))))))
 
 (defspec underive-tests
   1000
@@ -50,9 +71,22 @@
            :descendants {bar #{foo}},
            :ancestors {foo #{bar}}}
           (-> (make-hierarchy)
-              (derive bar that)
-              (derive foo bar)
-              (underive bar that))))))
+              (h/derive+ bar that)
+              (h/derive+ foo bar)
+              (h/underive+ bar that))))))
+
+(defspec underive-bound-tests
+  1000
+  (prop/for-all
+   [[foo bar that] (gen/vector-distinct (mg/generator hierarchy-member) {:num-elements 3})]
+   (h/bound
+    (is (= {:parents {foo #{bar}},
+            :descendants {bar #{foo}},
+            :ancestors {foo #{bar}}}
+           (-> (make-hierarchy)
+               (derive bar that)
+               (derive foo bar)
+               (underive bar that)))))))
 
 (defn- reset-global-hierarchy!
   []
@@ -66,6 +100,7 @@
   1000
   (prop/for-all
    [[foo bar that] (gen/vector-distinct (mg/generator hierarchy-member) {:num-elements 3})]
+   (h/activate!)
    (reset-global-hierarchy!)
    (derive bar that)
    (derive foo bar)
@@ -79,6 +114,7 @@
   1000
   (prop/for-all
    [[foo bar that] (gen/vector-distinct (mg/generator hierarchy-member) {:num-elements 3})]
+   (h/activate!)
    (reset-global-hierarchy!)
    (derive bar that)
    (derive foo bar)

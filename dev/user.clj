@@ -1,5 +1,6 @@
 (ns user
-  (:require [criterium.core :refer [report-result
+  (:require [hierarchy.core :as h]
+            [criterium.core :refer [report-result
                                     with-progress-reporting
                                     quick-benchmark] :as crit]))
 
@@ -8,9 +9,9 @@
    (with-progress-reporting
      (quick-benchmark
       (-> (make-hierarchy)
-          (derive :bar :that)
-          (derive :foo :bar)
-          (isa? :foo :bar))
+          (h/derive+ :bar [:that "thing"])
+          (h/derive+ :foo :bar)
+          (isa? :foo [:that "thing"]))
       {:verbose true})))) ;; => true
 
 (comment

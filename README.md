@@ -8,22 +8,37 @@ or that child must be either a namespace-qualified symbol or keyword or a class.
 
 # _Usage_
 
-Here's a simple example.
+Here's are a couple of examples.
 
 ```clj
 (ns user
-  (:require [hierarchy.core]))
+  (:require [hierarchy.core :as h]))
 
-;;; using global hierarchy
-(derive :bar :that)
-(derive :foo :bar)
-(isa? :foo :bar) ;; => true
-
-;;; using via make-hierarchy
+;;; using with a hierarchy
 (-> (make-hierarchy)
-    (derive :bar :that)
-    (derive :foo :bar)
-    (isa? :foo :bar)) ;; => true
+    (h/derive+ :bar [:that "thing"])
+    (h/derive+ :foo :bar)
+    (isa? :foo [:that "thing"])) ;; => true
+
+;;; using global hierarchy via `derive+` and `underive+` directly
+(h/derive+ :bar [:that "thing"])
+(h/derive+ :foo :bar)
+(isa? :foo [:that "thing"]) ;; => true
+
+;;; using global hierarchy with redef'd `derive` and `underive` using `bound`
+(h/bound ;;; this allows more precise use where needed
+  (derive :bar [:that "thing"])
+  (derive :foo :bar)
+  (isa? :foo [:that "thing"])) ;; => true
+
+;;; using global hierarchy with altered `derive` and `underive` vars using `activate!`
+(h/activate!) ;;; your application can activate global bindings
+
+(derive :bar [:that "thing"])
+(derive :foo :bar)
+(isa? :foo [:that "thing"]) ;; => true
+
+(h/deactivate!) ;;; this exists mainly for testing
 ```
 
 See the existing tests for more examples.
