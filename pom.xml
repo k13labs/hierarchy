@@ -5,9 +5,9 @@
   <groupId>com.github.k13labs</groupId>
   <artifactId>hierarchy</artifactId>
   <name>hierarchy</name>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <scm>
-    <tag>0.0.1</tag>
+    <tag>0.0.2</tag>
     <url>https://github.com/k13labs/hierarchy</url>
     <connection>scm:git:git://github.com/k13labs/hierarchy.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/k13labs/hierarchy.git</developerConnection>
