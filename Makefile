@@ -1,7 +1,6 @@
 .PHONY: repl test clean deploy install format-check format-fix
 
-env:
-	env
+SHELL := /bin/bash
 
 repl:
 	clojure -M:dev:test:app:repl
