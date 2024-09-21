@@ -32,4 +32,6 @@ jobs:
     - name: Run build jar
       run: make build
     - name: Run build app
-      run: make build-native
+      run: |
+        make build-native
+        build/hierarchy-test-app this is a test invocation of native app
