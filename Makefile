@@ -38,7 +38,6 @@ build-native:
 		"--no-server" \
 		"--allow-incomplete-classpath" \
 		"--trace-object-instantiation=java.lang.Thread" \
-		"--features=clj_easy.graal_build_time.InitClojureClasses" \
 		"build/hierarchy-test-app"
 
 deploy: clean build
