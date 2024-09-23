@@ -7,8 +7,7 @@
         :extra-deps {reloaded.repl/reloaded.repl {:mvn/version "0.2.4"}
                      criterium/criterium {:mvn/version "0.4.6"}}}
 
-  :app {:extra-paths ["app"]
-        :extra-deps {com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}}}
+  :app {:extra-paths ["app"]}
 
   :clj-kondo {:extra-deps {clj-kondo/clj-kondo {:mvn/version "2023.12.15"}}
               :main-opts ["-m" "clj-kondo.main"]}

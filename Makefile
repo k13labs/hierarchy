@@ -18,10 +18,14 @@ lint:
 build:
 	clojure -X:jar :sync-pom true :jar "build/hierarchy.jar"
 
-build-native: build
-	mkdir -p build/graalvm-config
+build-uberjar:
 	clojure -X:uberjar :sync-pom false :jar "build/hierarchy-test-app.jar"
+
+build-native-config:
+	mkdir -p build/graalvm-config
 	java -agentlib:native-image-agent=config-output-dir=build/graalvm-config -jar "build/hierarchy-test-app.jar" hierarchy.main
+
+build-native:
 	native-image -jar "build/hierarchy-test-app.jar" \
 		"-H:+ReportExceptionStackTraces" \
 		"-H:+JNI" \
@@ -34,8 +38,6 @@ build-native: build
 		"--no-server" \
 		"--allow-incomplete-classpath" \
 		"--trace-object-instantiation=java.lang.Thread" \
-		"--features=clj_easy.graal_build_time.InitClojureClasses" \
-		"-H:ConfigurationFileDirectories=build/graalvm-config" \
 		"build/hierarchy-test-app"
 
 deploy: clean build
