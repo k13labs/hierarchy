@@ -38,7 +38,8 @@
   hierarchy obtained from make-hierarchy, if not supplied defaults to,
   and modifies, the global hierarchy."
   ([tag parent]
-   (alter-var-root #'core/global-hierarchy derive+ tag parent))
+   (alter-var-root #'core/global-hierarchy derive+ tag parent)
+   nil)
   ([h tag parent]
    (assert (some? h))
    (assert (some? tag))
@@ -71,7 +72,8 @@
   hierarchy obtained from make-hierarchy, if not supplied defaults to,
   and modifies, the global hierarchy."
   ([tag parent]
-   (alter-var-root #'core/global-hierarchy underive+ tag parent))
+   (alter-var-root #'core/global-hierarchy underive+ tag parent)
+   nil)
   ([h tag parent]
    (assert (some? h))
    (assert (some? tag))
